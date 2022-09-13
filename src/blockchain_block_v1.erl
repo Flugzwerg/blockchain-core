@@ -372,12 +372,12 @@ to_json(Block, _Opts) ->
       hash => ?BIN_TO_B64(hash_block(Block)),
       prev_hash => ?BIN_TO_B64(prev_hash(Block)),
       hbbft_round => hbbft_round(Block),
-      signatures => [?BIN_TO_B64(S) || S <- signatures(Block)],
-      seen_votes => [
-        #{
-            votes => S,
-            addr => ?BIN_TO_B58(M)
-        } || {S, M} <- seen_votes(Block)],
+%      signatures => [?BIN_TO_B64(S) || S <- signatures(Block)],
+%      seen_votes => [
+%        #{
+%            votes => S,
+%            addr => ?BIN_TO_B58(M)
+%        } || {S, M} <- seen_votes(Block)],
       transactions => [
         #{
             hash => ?BIN_TO_B64(blockchain_txn:hash(T)),
