@@ -372,7 +372,8 @@ to_json(Block, _Opts) ->
       hash => ?BIN_TO_B64(hash_block(Block)),
       prev_hash => ?BIN_TO_B64(prev_hash(Block)),
       hbbft_round => hbbft_round(Block),
-      signatures => [?BIN_TO_B64(S) || S <- signatures(Block)],
+      signature_count => length(signatures(Block)),
+      %signatures => [?BIN_TO_B64(S) || S <- signatures(Block)],
       %seen_votes => [
       %  #{
       %      votes => S,
