@@ -1,7 +1,7 @@
 .PHONY: compile test typecheck ci
 grpc_services_directory=src/grpc/autogen
 
-REBAR=./rebar3
+REBAR=rebar3
 
 compile: | $(grpc_services_directory)
 	$(REBAR) compile
