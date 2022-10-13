@@ -364,6 +364,8 @@ json_type() ->
 
 -spec to_json(block(), blockchain_json:opts()) -> blockchain_json:json_object().
 to_json(Block, _Opts) ->
+    % TODO better way to get committee member count here? miner:count_consensus_members(Chain) with some Chain?
+    MemberCount = length(seen_votes(Block)),
     #{
       height => height(Block),
       election_epoch => election_epoch(Block),
@@ -371,6 +373,29 @@ to_json(Block, _Opts) ->
       time => time(Block),
       hash => ?BIN_TO_B64(hash_block(Block)),
       prev_hash => ?BIN_TO_B64(prev_hash(Block)),
+      hbbft_round => hbbft_round(Block),
+      snapshot_hash => ?BIN_TO_B64(snapshot_hash(Block)),
+      rescue_signature => ?BIN_TO_B64(rescue_signature(Block)),
+      signature_count => length(signatures(Block)),
+      signatures => [
+        #{
+            signer => ?BIN_TO_B58(Signer),
+            signature => ?BIN_TO_B64(Sig)
+        } || {Signer, Sig} <- signatures(Block)],
+      seen_votes => [
+        #{
+            index => S,
+            vector => [
+                       #{
+                            index => K,
+                            seen => V
+                        } || {K, V} <- maps:to_list(blockchain_utils:bitvector_to_map(MemberCount, M))]
+        } || {S, M} <- seen_votes(Block)],
+      bba_completion => [
+        #{
+            index => K,
+            bba => V
+        } || {K, V} <- maps:to_list(blockchain_utils:bitvector_to_map(MemberCount, bba_completion(Block)))],
       transactions => [
         #{
             hash => ?BIN_TO_B64(blockchain_txn:hash(T)),
